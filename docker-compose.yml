@@ -1,0 +1,36 @@
+version: '3.9' # Немного обновим версию для свежести
+
+services:
+  # Сервис веб-приложения (PHP + Apache)
+  application_server: # Изменено с 'web'
+    build:
+      context: . # Собираем из текущей директории
+      dockerfile: Dockerfile
+    container_name: shchapov_php_apache_app # Уникальное имя контейнера
+    ports:
+      - "8080:80" # Изменен внешний порт на 8080, внутренний Apache 80
+    volumes:
+      - .:/var/www/html # Монтируем код приложения
+    depends_on:
+      - database_server # Зависит от сервиса БД
+    environment:
+      # APACHE_DOCUMENT_ROOT уже по умолчанию /var/www/html для этого образа
+      APACHE_LOG_DIR: /var/log/apache2
+    restart: unless-stopped
+
+  # Сервис базы данных (MySQL)
+  database_server: # Изменено с 'db'
+    image: mysql:8.0
+    container_name: shchapov_mysql_storage # Уникальное имя контейнера
+    environment:
+      MYSQL_ROOT_PASSWORD: YourSecureRootPassword123 # Изменен пароль root
+      MYSQL_DATABASE: shchapov_webapp_db # Изменено имя БД
+      MYSQL_USER: app_user # Создадим отдельного пользователя для приложения
+      MYSQL_PASSWORD: UserPasswordForApp321 # Пароль для этого пользователя
+    command: --default-authentication-plugin=mysql_native_password
+    volumes:
+      - shchapov_mysql_volume:/var/lib/mysql # Именованный том для сохранения данных БД
+    restart: unless-stopped
+
+volumes:
+  shchapov_mysql_volume: # Имя тома
