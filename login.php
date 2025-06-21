@@ -6,7 +6,7 @@ $db_conn = establish_db_connection();
 // initialize_user_table($db_conn); // Таблица должна быть уже создана при регистрации
 
 if (isset($_COOKIE[AUTH_COOKIE_NAME])) {
-    header("Location: user_profile.php");
+    header("Location: profile.php");
     exit;
 }
 
@@ -33,7 +33,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['login_action'])) {
                 $user_data = mysqli_fetch_assoc($query_result);
                 setcookie(AUTH_COOKIE_NAME, $user_data['client_login'], time() + (3600 * 2), "/");
                 $_SESSION['flash_message'] = "С возвращением, " . htmlspecialchars($user_data['client_login']) . "!";
-                header('Location: user_profile.php');
+                header('Location: profile.php');
                 exit;
             } else {
                 $login_error_message = 'Введен неверный логин или пароль. Попробуйте снова.';
