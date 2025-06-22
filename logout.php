@@ -1,5 +1,5 @@
 <?php
-// perform_logout.php
+
 require_once 'db_config.php'; // Для доступа к AUTH_COOKIE_NAME
 session_start();
 
@@ -18,6 +18,9 @@ if (ini_get("session.use_cookies")) {
 session_destroy();
 
 $_SESSION['flash_message_logout'] = "Вы успешно вышли из системы."; // Можно использовать на странице логина
-header("Location: user_login.php"); // Перенаправляем на страницу входа
+header("Location: login.php"); // Перенаправляем на страницу входа
 exit;
 ?>
+
+
+
